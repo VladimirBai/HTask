@@ -31,11 +31,14 @@ public class Recipe {
     @JoinColumn(name = "ID_PATIENT", nullable = false)
     private Patient patient;
 
-    public Recipe(String description, LocalDate dateCreation, LocalDate dateExpiration, String priority) {
+    public Recipe(String description, LocalDate dateCreation, LocalDate dateExpiration,
+                  String priority, Doctor doctor, Patient patient) {
         this.description = description;
         this.dateCreation = dateCreation;
         this.dateExpiration = dateExpiration;
         this.priority = priority;
+        this.doctor = doctor;
+        this.patient = patient;
     }
 
     public Recipe() {
