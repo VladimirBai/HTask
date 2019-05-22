@@ -71,7 +71,7 @@ public class DoctorView extends VerticalLayout implements View {
 
     private void removeRow(DoctorDao doctorDao) {
         Optional<Doctor> doctor = grid.getSelectionModel().getFirstSelectedItem();
-        doctor.ifPresent(x -> new DoctorDao().remove(doctor.get()));
+        doctor.ifPresent(x -> doctorDao.remove(doctor.get()));
         grid.setItems(doctorDao.findAll());
     }
 
@@ -142,8 +142,7 @@ public class DoctorView extends VerticalLayout implements View {
             } else {
                 DoctorDao doctorDao = new DoctorDao();
                 if (this.doctor == null) {
-                    Doctor doctor = new Doctor(name, middleName, lastName, specialization);
-                    doctorDao.save(doctor);
+                    doctorDao.save(new Doctor(name, middleName, lastName, specialization));
                 } else {
                     this.doctor.setName(name);
                     this.doctor.setMiddleName(middleName);
