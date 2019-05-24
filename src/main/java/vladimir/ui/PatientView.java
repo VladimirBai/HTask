@@ -31,6 +31,10 @@ public class PatientView extends VerticalLayout implements View {
         removeBtn = new Button("Remove Patient");
         horizontalLayout = new HorizontalLayout();
 
+        customiseWidth();
+
+
+
         horizontalLayout.addComponents(createBtn, editBtn, removeBtn);
         addComponent(backBtn);
         addComponent(grid);
@@ -43,7 +47,6 @@ public class PatientView extends VerticalLayout implements View {
         List<Patient> patients = patientDao.findAll();
         grid.setColumns("name", "middleName", "lastName", "phone");
         grid.setItems(patients);
-        customiseWidth();
 
         backBtn.addClickListener(x -> navigator.navigateTo(""));
         createBtn.addClickListener(x -> UI.getCurrent().addWindow(new SubWindow()));
@@ -66,7 +69,14 @@ public class PatientView extends VerticalLayout implements View {
 
     private void removeRow(PatientDao patientDao) {
         Optional<Patient> patient = grid.getSelectionModel().getFirstSelectedItem();
-        patient.ifPresent(x -> patientDao.remove(patient.get()));
+        patient.ifPresent(x -> {
+            Patient pat = patient.get();
+            if (pat.getRecipes().size() > 0) {
+                Notification.show("There is one or more recipes");
+            } else {
+                patientDao.remove(pat);
+            }
+        });
         grid.setItems(patientDao.findAll());
     }
 
@@ -141,6 +151,7 @@ public class PatientView extends VerticalLayout implements View {
                     patientDao.update(this.patient);
                 }
                 grid.setItems(patientDao.findAll());
+                UI.getCurrent().removeWindow(this);
                 close();
             }
         }

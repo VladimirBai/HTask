@@ -2,7 +2,6 @@ package vladimir.ui;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.vaadin.annotations.DesignRoot;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
@@ -11,8 +10,14 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
-import vladimir.dao.PatientDao;
-import vladimir.model.Patient;
+import org.hsqldb.cmdline.SqlFile;
+import org.hsqldb.cmdline.SqlToolError;
+import vladimir.util.ConnectionCreator;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
@@ -32,6 +37,18 @@ public class MyUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
         getPage().setTitle("My Vaadin app");
+
+        try (Connection connection = ConnectionCreator.getConnection()) {
+            SqlFile sqlFile = new SqlFile(new File("taskdb/table-create.sql"));
+            sqlFile.setConnection(connection);
+            sqlFile.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SqlToolError sqlToolError) {
+            sqlToolError.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         navigator = new Navigator(this, this);
         navigator.addView("", new MainView());

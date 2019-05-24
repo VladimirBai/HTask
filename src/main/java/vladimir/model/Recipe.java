@@ -14,7 +14,7 @@ public class Recipe {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "DATE_CREATED")
+    @Column(name = "DATE_CREATION")
     private LocalDate dateCreation;
 
     @Column(name = "DATE_EXPIRATION")

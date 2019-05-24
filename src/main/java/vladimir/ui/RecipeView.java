@@ -151,7 +151,8 @@ public class RecipeView extends VerticalLayout implements View {
             cancelBtn = new Button("Cancel");
             gridLayout = new GridLayout(4, 7);
 
-            textAreaDescription.setWidth("300");
+            textAreaDescription.setWidth("400");
+            textAreaDescription.setMaxLength(100);
 
             comboBoxPriority.setItems("NORMAL", "CITO", "STATIM");
             doctorComboBox.setItems(new DoctorDao().findAll());

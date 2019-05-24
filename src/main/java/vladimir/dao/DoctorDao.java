@@ -28,7 +28,7 @@ public class DoctorDao {
     public List<Doctor> findAll() {
         List<Doctor> doctors;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            doctors = session.createQuery("select d from Doctor d left join fetch d.recipes").getResultList();
+            doctors = session.createQuery("select distinct d from Doctor d left join fetch d.recipes").getResultList();
         }
         return doctors;
     }

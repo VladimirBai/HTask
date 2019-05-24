@@ -71,14 +71,21 @@ public class DoctorView extends VerticalLayout implements View {
 
     private void removeRow(DoctorDao doctorDao) {
         Optional<Doctor> doctor = grid.getSelectionModel().getFirstSelectedItem();
-        doctor.ifPresent(x -> doctorDao.remove(doctor.get()));
+        doctor.ifPresent(x -> {
+            Doctor doc = doctor.get();
+            if (doc.getRecipes().size() > 0) {
+                Notification.show("There is one or more recipes");
+            } else {
+                doctorDao.remove(doc);
+            }
+        });
         grid.setItems(doctorDao.findAll());
     }
 
     private void getStatistics() {
         String dataToShow;
         Optional<Doctor> doctor = grid.getSelectionModel().getFirstSelectedItem();
-        dataToShow = doctor.map(x -> String.valueOf(x.getRecipes().size())).orElse("There is no selected row");
+        dataToShow = doctor.map(x -> "Recipes written: " + x.getRecipes().size()).orElse("There is no selected row");
         Notification.show(dataToShow);
     }
 
@@ -151,6 +158,7 @@ public class DoctorView extends VerticalLayout implements View {
                     doctorDao.update(this.doctor);
                 }
                 grid.setItems(doctorDao.findAll());
+                UI.getCurrent().removeWindow(this);
                 close();
             }
         }
